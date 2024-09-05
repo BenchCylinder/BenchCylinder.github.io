@@ -5,18 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stock Counter</title>
   <style>
+    /* Reset margins and paddings */
+    body, html {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     .stock-counter {
       padding: 10px 20px;
     }
 
     .header {
       display: inline-block; /* Ensure the header and progress bar align */
-      position: relative; /* Ensure absolute positioning of progress bar */
+      position: relative; /* Ensure proper positioning of progress bar */
     }
 
     .header p {
       font-weight: 700;
-      margin-bottom: 10px; /* Increased bottom margin for more spacing */
+      margin: 0; /* Remove default margin */
       font-size: 18px;
       font-family: 'General Sans Bold', sans-serif;
       display: inline; /* Ensure the paragraph text does not break */
@@ -31,19 +38,15 @@
       background-color: #ddd;
       height: 10px;
       border-radius: 50px;
-      position: absolute;
-      top: 35px; /* Adjusted top position to increase space between text and progress bar */
-      left: 0;
       overflow: hidden;
       width: 100%; /* Ensure it takes up space under the text */
+      margin-top: 5px; /* Adjust margin as needed */
     }
 
     .progress-bar {
       height: 100%;
       background-color: #e2372d;
       border-radius: 50px;
-      position: absolute;
-      left: 0;
       line-height: 0;
       text-align: center;
       color: #fff;
@@ -108,7 +111,7 @@
       var unitsLeft = getStoredStock();
 
       if (unitsLeft > 2) { // Ensure stock never goes below 2 units
-        if (unitsLeft <= 7) {
+        if (unitsLeft <= 5) {
           // Slow down the rate of decrease when stock is 5 or less
           intervalId = setInterval(updateProgressBar, getRandomInterval(180000, 300000)); // 3-5 minutes
         } else {
