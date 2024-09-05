@@ -83,7 +83,8 @@
       line-height: 0;
       text-align: center;
       color: #fff;
-      width: 0; /* Start with 0 width */
+      transition: width 0.5s ease-in-out;
+      width: 0;
     }
   </style>
 </head>
@@ -107,6 +108,7 @@
   </div>
 
   <script>
+
     var intervalId;
     const stockExpiryTime = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
 
@@ -159,7 +161,7 @@
         // Update progress bar width
         var containerWidth = document.querySelector('.progress-bar-container').offsetWidth;
         var progressBarWidth = (unitsLeft / 1000) * containerWidth;
-        progressBar.style.width = progressBarWidth + 'px'; // Set the width directly
+        progressBar.style.width = progressBarWidth + 'px';
       } else {
         unitsLeft = 2; // Ensure it doesn't go below 2 units
         setStoredStock(unitsLeft);
