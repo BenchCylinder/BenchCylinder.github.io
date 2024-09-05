@@ -4,43 +4,76 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stock Counter</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
   <style>
     /* Reset margins and paddings */
     body, html {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      font-family: 'Roboto', sans-serif; /* Apply Roboto font */
+    }
+
+    .container {
+      text-align: center; /* Center everything */
+      padding: 20px;
+    }
+
+    .promo-text {
+      margin-bottom: 20px;
+    }
+
+    .promo-text h1, .promo-text h2, .promo-text p {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', sans-serif; /* Apply Roboto font */
+    }
+
+    .promo-text h1 {
+      font-size: 24px; /* Adjust as needed for large text */
+      font-weight: bold;
+      line-height: 1.5; /* Increase line height for spacing */
+    }
+
+    .promo-text h2 {
+      font-size: 36px; /* Adjust as needed for largest text */
+      font-weight: bold;
+      line-height: 1.5; /* Increase line height for spacing */
+    }
+
+    .promo-text p {
+      font-size: 18px; /* Medium sized text */
+      line-height: 1.5; /* Increase line height for spacing */
     }
 
     .stock-counter {
       padding: 10px 20px;
+      display: inline-block;
     }
 
     .header {
-      display: inline-block; /* Ensure the header and progress bar align */
-      position: relative; /* Ensure proper positioning of progress bar */
+      display: inline-block;
+      position: relative;
     }
 
     .header p {
-      font-weight: 700;
-      margin: 0; /* Remove default margin */
+      font-weight: bold; /* Make the text bold */
+      margin: 0;
       font-size: 18px;
-      font-family: 'General Sans Bold', sans-serif;
-      display: inline; /* Ensure the paragraph text does not break */
     }
 
     #units-left {
-      color: red; /* Font color for the units */
+      color: red;
     }
 
     .progress-bar-container {
-      display: inline-block; /* Align with the text width */
+      display: inline-block;
       background-color: #ddd;
       height: 10px;
       border-radius: 50px;
       overflow: hidden;
-      width: 100%; /* Ensure it takes up space under the text */
-      margin-top: 5px; /* Adjust margin as needed */
+      width: 100%;
+      margin-top: 5px;
     }
 
     .progress-bar {
@@ -51,21 +84,29 @@
       text-align: center;
       color: #fff;
       transition: width 0.5s ease-in-out;
-      width: 0; /* Start with width 0 */
+      width: 0;
     }
   </style>
 </head>
 <body>
-  <section class="stock-counter">
-    <div class="stock-info">
-      <div class="header">
-        <p>LIVE: <span id="units-left"></span> units left out of 1,000</p>
-        <div class="progress-bar-container">
-          <div class="progress-bar" id="progress-bar"></div>
+  <div class="container">
+    <div class="promo-text">
+      <h1>WAREHOUSE CLEARANCE</h1>
+      <h2>50% OFF SALE</h2>
+      <p>We're moving to a bigger warehouse. Get 50% OFF the remaining stock while you can</p>
+    </div>
+    <section class="stock-counter">
+      <div class="stock-info">
+        <div class="header">
+          <p>LIVE: <span id="units-left"></span> units left out of 1,000</p>
+          <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar"></div>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
+
   <script>
     var intervalId;
     const stockExpiryTime = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
