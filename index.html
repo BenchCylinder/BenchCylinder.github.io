@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock Counter</title>
+  <style>
+    .stock-counter {
+      padding: 10px 20px;
+    }
+
+    .header {
+      display: inline-block; /* Ensure the header and progress bar align */
+      position: relative; /* Ensure absolute positioning of progress bar */
+    }
+
+    .header p {
+      font-weight: 700;
+      margin-bottom: 10px; /* Increased bottom margin for more spacing */
+      font-size: 18px;
+      font-family: 'General Sans Bold', sans-serif;
+      display: inline; /* Ensure the paragraph text does not break */
+    }
+
+    #units-left {
+      color: red; /* Font color for the units */
+    }
+
+    .progress-bar-container {
+      display: inline-block; /* Align with the text width */
+      background-color: #ddd;
+      height: 10px;
+      border-radius: 50px;
+      position: absolute;
+      top: 35px; /* Adjusted top position to increase space between text and progress bar */
+      left: 0;
+      overflow: hidden;
+      width: 100%; /* Ensure it takes up space under the text */
+    }
+
+    .progress-bar {
+      height: 100%;
+      background-color: #e2372d;
+      border-radius: 50px;
+      position: absolute;
+      left: 0;
+      line-height: 0;
+      text-align: center;
+      color: #fff;
+      transition: width 0.5s ease-in-out;
+      width: 0; /* Start with width 0 */
+    }
+  </style>
+</head>
+<body>
+  <section class="stock-counter">
+    <div class="stock-info">
+      <div class="header">
+        <p>LIVE: <span id="units-left"></span> units left out of 1,000</p>
+        <div class="progress-bar-container">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script>
+    var intervalId;
+    const stockExpiryTime = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+
+    function initializeStock() {
+      var lastVisit = localStorage.getItem('lastVisit');
+      var currentTime = Date.now();
+
+      if (lastVisit && (currentTime - lastVisit) > stockExpiryTime) {
+        // If the last visit was more than 3 hours ago, reset stock
+        var initialStock = Math.floor(Math.random() * (50 - 30 + 1)) + 30;
+        localStorage.setItem('unitsLeft', initialStock);
+      }
+
+      localStorage.setItem('lastVisit', currentTime); // Update last visit timestamp
+      var storedStock = localStorage.getItem('unitsLeft');
+
+      if (storedStock === null) {
+        // Initialize with a random stock between 30 and 50 if not set
+        var initialStock = Math.floor(Math.random() * (50 - 30 + 1)) + 30;
+        localStorage.setItem('unitsLeft', initialStock);
+        return initialStock;
+      }
+      
+      return parseInt(storedStock, 10); // Return the stored stock count
+    }
+
+    function getStoredStock() {
+      return parseInt(localStorage.getItem('unitsLeft'), 10);
+    }
+
+    function setStoredStock(value) {
+      localStorage.setItem('unitsLeft', value);
+    }
+
+    function getRandomInterval(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function updateProgressBar() {
+      var progressBar = document.getElementById("progress-bar");
+      var unitsLeftElement = document.getElementById("units-left");
+      var unitsLeft = getStoredStock();
+
+      if (unitsLeft > 2) { // Ensure stock never goes below 2 units
+        if (unitsLeft <= 7) {
+          // Slow down the rate of decrease when stock is 5 or less
+          intervalId = setInterval(updateProgressBar, getRandomInterval(180000, 300000)); // 3-5 minutes
+        } else {
+          intervalId = setInterval(updateProgressBar, getRandomInterval(30000, 60000)); // 30-60 seconds
+        }
+
+        // Update the stock count and progress bar width
+        unitsLeft--;
+        setStoredStock(unitsLeft);
+        unitsLeftElement.textContent = unitsLeft;
+
+        // Update progress bar width
+        var containerWidth = document.querySelector('.progress-bar-container').offsetWidth;
+        var progressBarWidth = (unitsLeft / 1000) * containerWidth;
+        progressBar.style.width = progressBarWidth + 'px';
+      } else {
+        unitsLeft = 2; // Ensure it doesn't go below 2 units
+        setStoredStock(unitsLeft);
+        unitsLeftElement.textContent = unitsLeft;
+        document.querySelector('.stock-counter').style.display = 'none';
+        clearInterval(intervalId); // Clear the interval when stock reaches 2 units
+      }
+    }
+
+    function startUpdating() {
+      var initialStock = initializeStock();
+      document.getElementById("units-left").textContent = initialStock; // Set initial stock count
+      updateProgressBar(); // Set initial progress bar width
+
+      // Increase the stock count by 1 on page load
+      var updatedStock = getStoredStock() + 1;
+      setStoredStock(updatedStock);
+
+      intervalId = setInterval(updateProgressBar, getRandomInterval(30000, 60000)); // Start with a random interval
+    }
+
+    startUpdating(); // Start the process
+  </script>
+</body>
+</html>
