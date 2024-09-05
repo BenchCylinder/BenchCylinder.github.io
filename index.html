@@ -111,13 +111,6 @@
       var unitsLeft = getStoredStock();
 
       if (unitsLeft > 2) { // Ensure stock never goes below 2 units
-        if (unitsLeft <= 5) {
-          // Slow down the rate of decrease when stock is 5 or less
-          intervalId = setInterval(updateProgressBar, getRandomInterval(180000, 300000)); // 3-5 minutes
-        } else {
-          intervalId = setInterval(updateProgressBar, getRandomInterval(30000, 60000)); // 30-60 seconds
-        }
-
         // Update the stock count and progress bar width
         unitsLeft--;
         setStoredStock(unitsLeft);
@@ -145,7 +138,27 @@
       var updatedStock = getStoredStock() + 1;
       setStoredStock(updatedStock);
 
-      intervalId = setInterval(updateProgressBar, getRandomInterval(30000, 60000)); // Start with a random interval
+      // Start a single interval
+      intervalId = setInterval(function() {
+        updateProgressBar();
+
+        var unitsLeft = getStoredStock();
+        var newInterval;
+
+        if (unitsLeft <= 5) {
+          // Slow down the rate of decrease when stock is 5 or less
+          newInterval = getRandomInterval(180000, 300000); // 3-5 minutes
+        } else if (unitsLeft <= 7) {
+          // Significantly slow down the rate of decrease when stock is 7 or less
+          newInterval = getRandomInterval(30000, 60000); // 30-60 seconds
+        } else {
+          // Normal interval for stock greater than 7
+          newInterval = getRandomInterval(5000, 40000); // 5-40 seconds
+        }
+
+        clearInterval(intervalId); // Clear the previous interval
+        intervalId = setInterval(arguments.callee, newInterval); // Set new interval
+      }, getRandomInterval(5000, 40000)); // Initial interval
     }
 
     startUpdating(); // Start the process
